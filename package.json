@@ -1,0 +1,29 @@
+{
+  "name": "liberaxa-site",
+  "version": "1.0.0",
+  "description": "Сайт движения «Движение либеральных сил» — статический сайт на Eleventy + Decap CMS",
+  "private": true,
+  "scripts": {
+    "sync:cms": "node scripts/sync-cms-config.js",
+    "prebuild": "npm run sync:cms",
+    "build": "eleventy",
+    "predev": "npm run sync:cms",
+    "dev": "eleventy --serve",
+    "start": "eleventy --serve",
+    "precms": "npm run sync:cms",
+    "cms": "decap-server",
+    "proxy:login": "wrangler login",
+    "proxy:dev": "wrangler dev --config oauth-proxy/wrangler.toml",
+    "proxy:secret:id": "wrangler secret put GITHUB_OAUTH_ID --config oauth-proxy/wrangler.toml",
+    "proxy:secret:key": "wrangler secret put GITHUB_OAUTH_SECRET --config oauth-proxy/wrangler.toml",
+    "proxy:deploy": "wrangler deploy --config oauth-proxy/wrangler.toml"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-img": "^6.0.0"
+  },
+  "devDependencies": {
+    "decap-server": "^3.10.0",
+    "wrangler": "^4.59.1"
+  }
+}

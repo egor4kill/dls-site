@@ -1,0 +1,43 @@
+---
+layout: base.njk
+title: "Новости"
+description: "Все публикации движения: новости, программа, аналитика и события."
+bodyClass: page-news
+---
+
+<section class="page-head">
+  <div class="container" data-reveal>
+    <div class="eyebrow">Лента публикаций</div>
+    <h1>Новости</h1>
+    <p>Публикации движения — от свежих к более ранним.</p>
+  </div>
+</section>
+
+<section class="section-news section-news--full">
+  <div class="container">
+    <div class="news-tools" data-reveal style="--reveal-delay: 100ms">
+      <label class="news-search">
+        <span class="sr-only">Поиск по новостям</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-4.3-4.3M17 10a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input type="search" id="newsSearch" placeholder="Поиск по новостям…" autocomplete="off">
+      </label>
+
+      <div class="news-cats" id="newsCats" role="tablist" aria-label="Категории">
+        <button type="button" class="cat-chip is-active" data-cat="" role="tab" aria-selected="true">Все</button>
+        {% for cat in categories.items %}
+        <button type="button" class="cat-chip" data-cat="{{ cat.name }}" style="--cat: {{ cat.color }}" role="tab" aria-selected="false">{{ cat.name }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="news-grid" id="newsGrid">
+      {% for item in collections.news | sortNews %}
+        <div class="news-card-wrap" data-reveal style="--reveal-delay: {{ loop.index0 * 90 + 160 }}ms" data-title="{{ item.data.title | lower }}" data-text="{{ (item.data.description or '') | lower }}" data-cat="{{ item.data.category or '' }}">
+          {% include "news-card.njk" %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <p class="news-empty is-hidden" id="newsEmpty">По вашему запросу ничего не найдено.</p>
+  </div>
+</section>

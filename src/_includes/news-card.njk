@@ -1,0 +1,24 @@
+<article class="news-card">
+  <a class="news-card-link" href="{{ item.url | url }}">
+    <div class="news-card-media">
+      {% if item.data.image %}
+        {% image item.data.image, item.data.title, "news-card-img", "(min-width: 900px) 33vw, 100vw" %}
+      {% else %}
+        <div class="news-card-img news-card-img--placeholder" aria-hidden="true">
+          <img src="{{ '/assets/images/logo.png' | url }}" alt="" loading="lazy" decoding="async" width="72" height="72">
+        </div>
+      {% endif %}
+    </div>
+    <div class="news-card-body">
+      <div class="news-card-meta">
+        <time datetime="{{ item.date | dateIso }}">{{ item.date | formatDate }}</time>
+        {% if item.data.category %}
+        <span class="news-card-cat" style="--cat: {{ categories.items | categoryColor(item.data.category) }}">{{ item.data.category }}</span>
+        {% endif %}
+      </div>
+      <h3 class="news-card-title">{{ item.data.title }}</h3>
+      {% if item.data.description %}<p class="news-card-excerpt">{{ item.data.description }}</p>{% endif %}
+      <span class="news-card-more">Читать <span aria-hidden="true">→</span></span>
+    </div>
+  </a>
+</article>

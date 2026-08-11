@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if title %}{{ title }} — {{ site.brand.full }}{% else %}{{ site.brand.short }} — {{ site.brand.full }}{% endif %}</title>
+  <meta name="description" content="{% if description %}{{ description }}{% else %}{{ site.meta.description }}{% endif %}">
+  <meta name="theme-color" content="#f4f3ef">
+  <link rel="icon" href="{{ '/assets/images/logo.png' | url }}" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+  <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
+</head>
+<body class="{{ bodyClass or '' }}">
+  <script>document.documentElement.classList.add('js');</script>
+
+  {% include "header.njk" %}
+
+  <main id="main">
+    {{ content | safe }}
+  </main>
+
+  {% include "footer.njk" %}
+
+  <script src="{{ '/assets/js/main.js' | url }}"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+---
+layout: base.njk
+---
+
+{% set newsList = collections.news | sortNews | pager(page.fileSlug) %}
+{% set older = newsList.older %}
+{% set newer = newsList.newer %}
+
+<article class="article">
+  <div class="container container--article">
+    <a href="{{ '/news/' | url }}" class="article-back">← Ко всем новостям</a>
+
+    <header class="article-header">
+      {% if category %}<span class="article-cat">{{ category }}</span>{% endif %}
+      <h1 class="article-title">{{ title }}</h1>
+      <div class="article-meta">
+        <time datetime="{{ date | dateIso }}">{{ date | formatDate }}</time>
+        {% if author %}<span class="article-author">Автор: {{ author }}</span>{% endif %}
+      </div>
+    </header>
+
+    {% if image %}
+    <figure class="article-cover">
+      {% image image, title, "", "100vw" %}
+    </figure>
+    {% endif %}
+
+    <div class="article-body">
+      {{ content | safe }}
+    </div>
+
+    <footer class="article-foot">
+      <a href="{{ '/news/' | url }}" class="cta-ghost">← Ко всем новостям</a>
+      <a href="{{ site.telegram.url }}" class="cta-btn" target="_blank" rel="noopener">{{ site.telegram.button_text }}</a>
+    </footer>
+  </div>
+</article>
+
+{% if older or newer %}
+<nav class="article-pager" aria-label="Другие публикации">
+  <div class="container">
+    {% if older %}
+    <a class="pager-card pager-prev" href="{{ older.url | url }}">
+      <span class="pager-dir">Предыдущая публикация</span>
+      <span class="pager-title">{{ older.data.title }}</span>
+    </a>
+    {% else %}<span></span>{% endif %}
+    {% if newer %}
+    <a class="pager-card pager-next" href="{{ newer.url | url }}">
+      <span class="pager-dir">Следующая публикация</span>
+      <span class="pager-title">{{ newer.data.title }}</span>
+    </a>
+    {% endif %}
+  </div>
+</nav>
+{% endif %}

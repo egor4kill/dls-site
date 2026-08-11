@@ -1,0 +1,55 @@
+name: Сборка и публикация
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Установка зависимостей
+        run: npm ci
+
+      - name: Сборка сайта
+        env:
+          # Префикс пути нужен, когда сайт лежит в подпапке GitHub Pages
+          # (user.github.io/имя-репозитория/). Для user-сайта
+          # (user.github.io) префикс пустой.
+          ELEVENTY_PATH_PREFIX: ${{ github.event.repository.name == format('{0}.github.io', github.repository_owner) && '' || format('/{0}', github.event.repository.name) }}
+        run: npm run build
+
+      - name: Загрузка артефакта
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Публикация на GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

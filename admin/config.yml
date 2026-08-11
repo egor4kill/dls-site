@@ -1,0 +1,64 @@
+# Настройки Decap CMS (Git-based панели управления).
+#
+# Перед публикацией:
+#   1. Замените repo на "владелец/репозиторий" (например "liberal-forces/site").
+#   2. Убедитесь, что репозиторий доступен для выбранного способа входа.
+# Подробнее: https://decapcms.org/docs/backends-overview/
+
+backend:
+  name: github
+  repo: YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME
+  branch: main
+  # Для GitHub Pages добавьте base_url OAuth-прокси по инструкции docs/decap-cms.md.
+  # base_url: https://YOUR-OAUTH-PROXY.example.workers.dev
+  # auth_endpoint: auth
+  # site_domain: YOUR_GITHUB_USERNAME.github.io
+  # Чтобы изменения редакторов сначала уходили pull request'ом,
+  # включите ветку main под защитой (branch protection) в настройках GitHub.
+  # Тогда CMS автоматически создаёт PR вместо прямого коммита.
+
+# При запущенном decap-server CMS работает напрямую с локальными файлами.
+local_backend: true
+
+locale: "ru"
+
+# Куда загружаются изображения из редактора
+media_folder: "src/assets/images/news"
+public_folder: "/assets/images/news"
+
+collections:
+  - name: "news"
+    label: "Новости"
+    label_singular: "Новость"
+    folder: "src/content/news"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    preview_path: "news/{{slug}}"
+    summary: "{{date}} — {{title}}"
+    sortable_fields: ["date", "title", "category"]
+    # BEGIN GENERATED CATEGORIES - редактируйте src/_data/categories.json
+    view_filters:
+      - { label: "Новости", field: "category", pattern: "Новости" }
+      - { label: "Программа", field: "category", pattern: "Программа" }
+      - { label: "Аналитика", field: "category", pattern: "Аналитика" }
+      - { label: "События", field: "category", pattern: "События" }
+    # END GENERATED CATEGORY FILTERS
+    description: "Публикации движения. Каждая новость — отдельный markdown-файл. После сохранения сайт пересоберётся автоматически."
+    fields:
+      - { label: "Заголовок", name: "title", widget: "string", hint: "Название новости" }
+      - { label: "Дата публикации", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - label: "Категория"
+        name: "category"
+        widget: "select"
+        options:
+          - "Новости"
+          - "Программа"
+          - "Аналитика"
+          - "События"
+        # END GENERATED CATEGORIES
+        default: "Новости"
+      - { label: "Главное изображение", name: "image", widget: "image", required: false, hint: "Обложка новости (16:9). Если не выбрана — будет показана плашка с эмблемой." }
+      - { label: "Краткое описание", name: "description", widget: "text", required: false, hint: "Превью для карточки в ленте" }
+      - { label: "Автор", name: "author", widget: "string", required: false }
+      - { label: "Текст новости", name: "body", widget: "markdown", hint: "Поддерживаются заголовки, списки, цитаты, таблицы, ссылки и изображения. Видео вставляется как HTML-код iframe." }

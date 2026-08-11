@@ -1,0 +1,16 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a class="foot-brand" href="{{ '/' | url }}">
+      <span class="foot-monogram" aria-hidden="true">ДЛС</span>
+      <span>{{ site.brand.short }} — {{ site.brand.full }}</span>
+    </a>
+
+    <nav class="foot-links" aria-label="Меню в подвале">
+      {% for item in site.nav %}
+      <a href="{{ item.url | url }}">{{ item.label }}</a>
+      {% endfor %}
+    </nav>
+
+    <p class="copy">{{ site.footer.copy }}</p>
+  </div>
+</footer>

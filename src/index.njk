@@ -1,0 +1,153 @@
+---
+layout: base.njk
+bodyClass: page-home
+---
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">{{ site.hero.eyebrow }}</div>
+      <h1 class="hero-title">{{ site.hero.title_html | safe }}</h1>
+      <p class="hero-lede">{{ site.hero.lede }}</p>
+      <div class="hero-actions">
+        <a href="{{ site.telegram.url }}" class="cta-btn" target="_blank" rel="noopener">{{ site.telegram.button_text }}</a>
+        <a href="{{ '/#pillars' | url }}" class="cta-ghost">Открыть программу <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-stats">
+        {% for stat in site.hero.stats %}
+        <div class="stat"><b>{{ stat.value }}</b><span>{{ stat.label }}</span></div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-axis" aria-hidden="true"><span>СВОБОДА</span><span>СИЛА</span><span>РАСЧЁТ</span></div>
+      <div class="frame">
+        {% image "/assets/images/mascot.png", "Символ движения", "hero-img", "(min-width: 900px) 40vw, 100vw" %}
+        <div class="frame-index" aria-hidden="true">ДЛС / 2026</div>
+        <div class="badge-float">
+          <span class="badge-arrow" aria-hidden="true">↗</span>
+          <p><b>{{ site.hero.badge_title }}</b><span>{{ site.hero.badge_text }}</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip" aria-hidden="true">
+  <div class="strip-track">
+    {% for i in range(0, 2) %}{% for item in site.strip %}<span>{{ item }}</span>{% endfor %}{% endfor %}
+  </div>
+</div>
+
+<!-- PILLARS -->
+<section class="section-pillars" id="pillars">
+  <div class="container">
+    <div class="sec-head">
+      <div class="section-index">01 / 04</div>
+      <div class="eyebrow">Четыре опоры курса</div>
+      <h2>Не обещания.<br>Принципы.</h2>
+      <p>Каждое направление курса опирается на одно и то же: расчёт вместо лозунга. Выберите тезис, чтобы открыть конкретные решения.</p>
+    </div>
+
+    {% set angles = [0, 90, 180, 270] %}
+    <div class="compass-wrap" data-reveal>
+      <div class="compass-stage">
+        <div class="compass-ring" aria-hidden="true"></div>
+        <div class="compass-ring r2" aria-hidden="true"></div>
+        <div class="compass-ring r3" aria-hidden="true"></div>
+        <div class="needle" id="needle" aria-hidden="true"></div>
+        <div class="compass-core" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none">
+            <path d="M50 10 C60 30 68 38 76 44 C64 48 56 56 52 74 C48 56 40 48 28 44 C40 40 46 28 50 10Z" fill="url(#g1)"/>
+            <defs><linearGradient id="g1" x1="28" y1="10" x2="76" y2="74"><stop stop-color="#8be8dc"/><stop offset="1" stop-color="#1a8f96"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="compass-nodes">
+          {% for p in site.pillars %}
+          <button class="node node-{{ loop.index }}" data-i="{{ loop.index0 }}" data-angle="{{ angles[loop.index0] }}" type="button" aria-pressed="false">
+            <span class="n-num">0{{ loop.index }}</span>
+            <span class="n-title">{{ p.title }}</span>
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="compass-detail" id="detailPanel">
+        {% for p in site.pillars %}
+        <div class="detail-panel" data-i="{{ loop.index0 }}">
+          <div class="d-num">0{{ loop.index }} / 0{{ site.pillars | length }}</div>
+          <h3>{{ p.title }}</h3>
+          <p class="d-recap">{{ p.recap }}</p>
+          <ul>
+            {% for item in p.items %}
+            <li><span class="detail-rule" aria-hidden="true"></span><b>{{ item.title }}</b><span>{{ item.text }}</span></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="section-quote" id="society" data-reveal>
+  <div class="container">
+    <div class="quote-label">02 / МАНИФЕСТ</div>
+    <h2>{{ site.quote.text_html | safe }}</h2>
+    <div class="sig">{{ site.quote.sig }}</div>
+  </div>
+</section>
+
+<!-- RECAP -->
+<section class="section-recap">
+  <div class="container">
+    <div class="recap-grid">
+      {% for p in site.pillars %}
+      <div class="recap-card" data-reveal>
+        <div class="n">0{{ loop.index }}</div>
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.recap }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- NEWS PREVIEW -->
+<section class="section-news">
+  <div class="container">
+    <div class="sec-head">
+      <div class="section-index">03 / 04</div>
+      <div class="eyebrow">Что нового</div>
+      <h2>Повестка<br>движения</h2>
+      <p>Позиции, новости и разбор решений. Без информационного шума.</p>
+    </div>
+    <div class="news-grid">
+      {% for item in collections.news | sortNews | limit(3) %}
+        <div data-reveal>{% include "news-card.njk" %}</div>
+      {% endfor %}
+    </div>
+    <div class="news-more">
+      <a href="{{ '/news/' | url }}" class="cta-ghost">Все новости →</a>
+    </div>
+  </div>
+</section>
+
+<!-- TELEGRAM CTA -->
+<section class="section-tgcta">
+  <div class="container">
+    <div class="tg-cta">
+      <div class="tg-cta-text">
+        <h2>{{ site.telegram.cta_title | safe }}</h2>
+        <p>{{ site.telegram.cta_text }}</p>
+      </div>
+      <a href="{{ site.telegram.url }}" class="cta-btn" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.5 4.5L2.7 11.9c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.5 0 .7-.2 1-.5l2.4-2.3 4.9 3.6c.9.5 1.6.2 1.8-.8l3.3-15.2c.3-1.2-.5-1.8-1.6-1.4z" fill="currentColor"/></svg>
+        <span>{{ site.telegram.button_text }}</span>
+      </a>
+    </div>
+  </div>
+</section>

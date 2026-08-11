@@ -1,0 +1,28 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="{{ '/' | url }}" aria-label="{{ site.brand.full }} — на главную">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="brand-text">
+        <b>{{ site.brand.short }}</b>
+        <span>{{ site.brand.full }}</span>
+      </span>
+    </a>
+
+    <nav class="site-nav" id="siteNav" aria-label="Основное меню">
+      <ul>
+        {% for item in site.nav %}
+        <li>
+          <a href="{{ item.url | url }}" {% if page.url == item.url %}class="is-active" aria-current="page"{% endif %}>{{ item.label }}</a>
+        </li>
+        {% endfor %}
+        <li class="nav-cta">
+          <a class="cta-btn cta-btn--compact" href="{{ site.telegram.url }}" target="_blank" rel="noopener">В движение <span aria-hidden="true">↗</span></a>
+        </li>
+      </ul>
+    </nav>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Открыть меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
