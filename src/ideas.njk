@@ -1,0 +1,66 @@
+---
+layout: base.njk
+title: "Идеи движения"
+description: "Четыре опоры курса Движения либеральных сил: экономика, суверенитет, технократия, общество."
+bodyClass: page-ideas
+---
+
+<!-- PAGE HEAD -->
+<section class="page-head">
+  <div class="container" data-reveal>
+    <div class="eyebrow">Программа движения</div>
+    <h1>Идеи движения</h1>
+    <p>Четыре опоры, на которых строится курс. Без лозунгов — только решения по расчёту.</p>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="section-ideas">
+  <div class="container">
+    {% for p in site.pillars %}
+    <article class="idea-card" data-reveal style="--reveal-delay: {{ loop.index0 * 120 }}ms">
+      <div class="idea-num">0{{ loop.index }} / 04</div>
+      <div class="idea-body">
+        <h2>{{ p.title }}</h2>
+        <p class="idea-recap">{{ p.recap }}</p>
+        <ul>
+          {% for item in p.items %}
+          <li>
+            <span class="idea-rule" aria-hidden="true"></span>
+            <b>{{ item.title }}</b>
+            <span>{{ item.text }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="section-ideas-manifesto" data-reveal>
+  <div class="container">
+    <div class="ideas-manifesto">
+      <div class="ideas-manifesto-label">Манифест</div>
+      <h2>{{ site.quote.text_html | safe }}</h2>
+      <div class="sig">{{ site.quote.sig }}</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-tgcta">
+  <div class="container">
+    <div class="tg-cta">
+      <div class="tg-cta-text">
+        <h2>{{ site.telegram.cta_title | safe }}</h2>
+        <p>{{ site.telegram.cta_text }}</p>
+      </div>
+      <a href="{{ site.telegram.url }}" class="cta-btn" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21.5 4.5L2.7 11.9c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.5 0 .7-.2 1-.5l2.4-2.3 4.9 3.6c.9.5 1.6.2 1.8-.8l3.3-15.2c.3-1.2-.5-1.8-1.6-1.4z" fill="currentColor"/></svg>
+        <span>{{ site.telegram.button_text }}</span>
+      </a>
+    </div>
+  </div>
+</section>
