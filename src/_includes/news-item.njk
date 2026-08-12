@@ -19,12 +19,6 @@ layout: base.njk
       </div>
     </header>
 
-    {% if image %}
-    <figure class="article-cover">
-      {% image image, title, "", "100vw" %}
-    </figure>
-    {% endif %}
-
     <div class="article-body">
       {{ content | safe }}
     </div>
