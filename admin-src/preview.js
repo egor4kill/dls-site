@@ -61,6 +61,7 @@ export default function registerPreview(CMS) {
       const author = entry.getIn(["data", "author"]);
       const title = entry.getIn(["data", "title"]) || "Заголовок новости";
       const date = entry.getIn(["data", "date"]);
+      const image = entry.getIn(["data", "image"]);
 
       return h("div", null,
         h(Header),
@@ -68,6 +69,11 @@ export default function registerPreview(CMS) {
           h("article", { className: "article" },
             h("div", { className: "container container--article" },
               h("a", { href: siteUrl("/news/"), className: "article-back" }, "← Ко всем новостям"),
+              image
+                ? h("figure", { className: "article-cover" },
+                    h("img", { src: siteUrl(image), alt: title, loading: "lazy", decoding: "async" })
+                  )
+                : null,
               h("header", { className: "article-header" },
                 category ? h("span", { className: "article-cat" }, category) : null,
                 h("h1", { className: "article-title" }, title),
