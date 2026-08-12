@@ -7,10 +7,9 @@ backend:
   name: github
   repo: egor4kill/dls-site
   branch: main
-  # Для GitHub Pages добавьте base_url OAuth-прокси по инструкции docs/decap-cms.md.
-  # base_url: https://YOUR-OAUTH-PROXY.example.workers.dev
-  # auth_endpoint: auth
-  # site_domain: egor4kill.github.io
+  base_url: https://dls-decap-proxy.egorgubarenko8.workers.dev
+  auth_endpoint: auth
+  site_domain: egor4kill.github.io
   # Чтобы изменения редакторов сначала уходили pull request'ом,
   # включите ветку main под защитой (branch protection) в настройках GitHub.
   # Тогда CMS автоматически создаёт PR вместо прямого коммита.
