@@ -2,7 +2,7 @@
   <a class="news-card-link" href="{{ item.url | url }}">
     <div class="news-card-media">
       {% if item.data.image %}
-        {% image item.data.image, item.data.title, "news-card-img", "(min-width: 900px) 33vw, 100vw" %}
+        <img src="{{ item.data.image | url }}" alt="{{ item.data.title }}" class="news-card-img" loading="lazy" decoding="async">
       {% else %}
         <div class="news-card-img news-card-img--placeholder" aria-hidden="true">
           <img src="{{ '/assets/images/logo.png' | url }}" alt="" loading="lazy" decoding="async" width="72" height="72">
