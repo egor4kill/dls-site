@@ -55,7 +55,13 @@ collections:
           - "События"
         # END GENERATED CATEGORIES
         default: "Новости"
-      - { label: "Главное изображение", name: "image", widget: "image", required: false, hint: "Обложка новости (16:9). Если не выбрана — будет показана плашка с эмблемой." }
+      - { label: "Главное изображение", name: "image", widget: "image", required: false, choose_url: false, hint: "Обложка новости (16:9). Для обрезки и сжатия сначала нажмите «Подготовить фото» внизу справа." }
       - { label: "Краткое описание", name: "description", widget: "text", required: false, hint: "Превью для карточки в ленте" }
       - { label: "Автор", name: "author", widget: "string", required: false }
-      - { label: "Текст новости", name: "body", widget: "markdown", hint: "Поддерживаются заголовки, списки, цитаты, таблицы, ссылки и изображения. Видео вставляется как HTML-код iframe." }
+      - label: "Текст новости"
+        name: "body"
+        widget: "richtext"
+        modes: ["rich_text", "raw"]
+        buttons: ["bold", "italic", "strikethrough", "code", "link", "heading-two", "heading-three", "heading-four", "quote", "bulleted-list", "numbered-list"]
+        editor_components: ["image", "dls-image", "dls-gallery", "dls-video", "dls-callout", "dls-button", "dls-table", "code-block"]
+        hint: "Форматируйте текст панелью сверху. Кнопка «+» добавляет фото, галерею, видео, выделенный блок или кнопку. Режим Markdown нужен только для точного редактирования исходника."

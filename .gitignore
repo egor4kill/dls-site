@@ -4,3 +4,5 @@ _site/
 *.log
 oauth-proxy/.dev.vars
 .wrangler/
+admin/cms.js
+admin/cms.css

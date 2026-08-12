@@ -4,13 +4,14 @@
   "description": "Сайт движения «Движение либеральных сил» — статический сайт на Eleventy + Decap CMS",
   "private": true,
   "scripts": {
+    "build:cms": "node scripts/build-cms.js",
     "sync:cms": "node scripts/sync-cms-config.js",
-    "prebuild": "npm run sync:cms",
+    "prebuild": "npm run sync:cms && npm run build:cms",
     "build": "eleventy",
-    "predev": "npm run sync:cms",
+    "predev": "npm run sync:cms && npm run build:cms",
     "dev": "eleventy --serve",
     "start": "eleventy --serve",
-    "precms": "npm run sync:cms",
+    "precms": "npm run sync:cms && npm run build:cms",
     "cms": "decap-server",
     "proxy:login": "wrangler login",
     "proxy:dev": "wrangler dev --config oauth-proxy/wrangler.toml",
@@ -20,10 +21,15 @@
   },
   "dependencies": {
     "@11ty/eleventy": "^3.0.0",
-    "@11ty/eleventy-img": "^6.0.0"
+    "@11ty/eleventy-img": "^6.0.0",
+    "cropperjs": "^1.6.2",
+    "decap-cms-app": "^3.15.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "decap-server": "^3.10.0",
+    "esbuild": "^0.28.2",
     "wrangler": "^4.59.1"
   }
 }

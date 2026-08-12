@@ -26,6 +26,84 @@ function toDiskPath(siteUrl) {
   return path.join("src", clean.split("/").join(path.sep));
 }
 
+function escapeAttribute(value) {
+  return escapeHtml(value).replace(/\n/g, " ");
+}
+
+function decodeHtml(value = "") {
+  return String(value)
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&gt;/g, ">")
+    .replace(/&lt;/g, "<")
+    .replace(/&amp;/g, "&");
+}
+
+function videoSource(rawUrl) {
+  try {
+    const url = new URL(rawUrl);
+    const host = url.hostname.replace(/^www\./, "");
+    if (host === "youtu.be") return { type: "embed", src: `https://www.youtube-nocookie.com/embed/${escapeAttribute(url.pathname.slice(1))}` };
+    if (host.endsWith("youtube.com")) {
+      const id = url.searchParams.get("v") || url.pathname.match(/\/(?:embed|shorts)\/([^/?]+)/)?.[1];
+      if (id) return { type: "embed", src: `https://www.youtube-nocookie.com/embed/${escapeAttribute(id)}` };
+    }
+    if (host.endsWith("rutube.ru")) {
+      const id = url.pathname.match(/\/(?:video|play\/embed)\/([^/?]+)/)?.[1];
+      if (id) return { type: "embed", src: `https://rutube.ru/play/embed/${escapeAttribute(id)}` };
+    }
+    if (host.endsWith("vk.com") || host.endsWith("vkvideo.ru")) {
+      if (url.pathname.includes("video_ext.php")) return { type: "embed", src: escapeAttribute(url.href) };
+      const match = url.pathname.match(/video(-?\d+)_([0-9]+)/);
+      if (match) return { type: "embed", src: `https://vk.com/video_ext.php?oid=${match[1]}&id=${match[2]}&hd=2` };
+    }
+    if (/\.(mp4|webm|ogg)$/i.test(url.pathname)) return { type: "file", src: escapeAttribute(url.href) };
+  } catch (error) {
+    return null;
+  }
+  return null;
+}
+
+function renderMediaBlocks(html) {
+  return html
+    .replace(/<figure class="media-image media-image--(normal|wide|compact)"><img src="([^"]*)" alt="([^"]*)"><figcaption>(.*?)<\/figcaption><\/figure>/g, (_, size, src, alt, caption) => {
+      const imageUrl = src.startsWith("/") ? pathPrefix + src : src;
+      return `<figure class="media-image media-image--${size}"><img src="${escapeAttribute(imageUrl)}" alt="${escapeAttribute(decodeHtml(alt))}" loading="lazy" decoding="async">${caption ? `<figcaption>${caption}</figcaption>` : ""}</figure>`;
+    })
+    .replace(/<section class="media-gallery" data-title="([^"]*)" data-images="([^"]*)"><\/section>/g, (_, rawTitle, rawImages) => {
+      let images;
+      try { images = JSON.parse(decodeHtml(rawImages)); } catch (error) { return ""; }
+      if (!Array.isArray(images) || !images.length) return "";
+      const title = decodeHtml(rawTitle);
+      const items = images.map((image) => `<figure><img src="${escapeAttribute(pathPrefix + image.src)}" alt="${escapeAttribute(image.alt || "")}" loading="lazy" decoding="async">${image.caption ? `<figcaption>${escapeHtml(image.caption)}</figcaption>` : ""}</figure>`).join("");
+      return `<section class="media-gallery">${title ? `<h3>${escapeHtml(title)}</h3>` : ""}<div class="media-gallery-grid">${items}</div></section>`;
+    })
+    .replace(/<div class="media-video" data-url="([^"]*)" data-title="([^"]*)" data-caption="([^"]*)"><\/div>/g, (_, rawUrl, rawTitle, rawCaption) => {
+      const url = decodeHtml(rawUrl);
+      const title = decodeHtml(rawTitle) || "Видео";
+      const caption = decodeHtml(rawCaption);
+      const source = videoSource(url);
+      if (!source) return `<p><a href="${escapeAttribute(url)}">${escapeHtml(title)}</a></p>`;
+      const player = source.type === "file"
+        ? `<video controls preload="metadata" src="${source.src}"></video>`
+        : `<iframe src="${source.src}" title="${escapeAttribute(title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+      return `<figure class="media-video-frame"><div class="embed">${player}</div>${caption ? `<figcaption>${escapeHtml(caption)}</figcaption>` : ""}</figure>`;
+    })
+    .replace(/<aside class="article-callout article-callout--(info|important|idea)" data-title="([^"]*)">([\s\S]*?)<\/aside>/g, (_, type, rawTitle, text) => {
+      const title = decodeHtml(rawTitle);
+      return `<aside class="article-callout article-callout--${type}">${title ? `<strong>${escapeHtml(title)}</strong>` : ""}<p>${text}</p></aside>`;
+    })
+    .replace(/<div class="article-table" data-table="([^"]*)"><\/div>/g, (_, rawTable) => {
+      let table;
+      try { table = JSON.parse(decodeHtml(rawTable)); } catch (error) { return ""; }
+      const headers = Array.isArray(table.headers) ? table.headers : [];
+      const rows = Array.isArray(table.rows) ? table.rows : [];
+      const head = headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("");
+      const body = rows.map((row) => `<tr>${(row.cells || []).map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`).join("");
+      return `<div class="table-wrap"><table>${table.caption ? `<caption>${escapeHtml(table.caption)}</caption>` : ""}<thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+    });
+}
+
 // Оптимизация и ресайз изображений через @11ty/eleventy-img.
 // В шаблонах вызывается как: {{ image("/assets/...jpg", "альт", "класс", "sizes") }}
 async function imageShortcode(src, alt = "", cls = "", sizes = "100vw") {
@@ -128,6 +206,12 @@ module.exports = function (eleventyConfig) {
       token.attrSet("loading", "lazy");
       token.attrSet("decoding", "async");
       return defaultImage(tokens, idx, options, env, self);
+    };
+    const defaultHtmlBlock = mdLib.renderer.rules.html_block || function (tokens, idx) {
+      return tokens[idx].content;
+    };
+    mdLib.renderer.rules.html_block = function (tokens, idx, options, env, self) {
+      return renderMediaBlocks(defaultHtmlBlock(tokens, idx, options, env, self));
     };
     return mdLib;
   });
