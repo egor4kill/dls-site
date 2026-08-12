@@ -218,14 +218,23 @@ function openImageStudio() {
     if (!file) return;
     sourceName = file.name.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9а-яА-ЯёЁ_-]+/g, "-");
     const reader = new FileReader();
-    reader.onload = () => {
+    const initCropper = () => {
       if (cropper) cropper.destroy();
+      image.onload = null;
       image.src = reader.result;
       image.style.display = "block";
       modal.querySelector(".image-studio-empty").style.display = "none";
-      cropper = new Cropper(image, { aspectRatio: 16 / 9, viewMode: 1, autoCropArea: 1, background: false });
-      modal.querySelector("[data-export]").disabled = false;
+      if (image.complete && image.naturalWidth > 0) {
+        cropper = new Cropper(image, { aspectRatio: 16 / 9, viewMode: 1, autoCropArea: 1, background: false });
+        modal.querySelector("[data-export]").disabled = false;
+      } else {
+        image.onload = () => {
+          cropper = new Cropper(image, { aspectRatio: 16 / 9, viewMode: 1, autoCropArea: 1, background: false });
+          modal.querySelector("[data-export]").disabled = false;
+        };
+      }
     };
+    reader.onload = initCropper;
     reader.readAsDataURL(file);
   });
   modal.querySelector("[data-ratio]").addEventListener("change", event => cropper && cropper.setAspectRatio(Number(event.target.value)));
