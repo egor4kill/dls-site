@@ -196,12 +196,27 @@ main { padding-top: var(--header-h); }
 .ideas-manifesto h2 { position: relative; z-index: 1; max-width: 980px; font-size: clamp(28px,4.2vw,56px); line-height: 1.13; }
 .ideas-manifesto h2 em { color: var(--acid); font-style: normal; }
 .ideas-manifesto .sig { position: relative; z-index: 1; max-width: 440px; margin: 30px 0 0 auto; padding-top: 13px; border-top: 1px solid rgba(255,255,255,.5); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+
+/* Full-length manifesto (ideas page) */
+.ideas-manifesto--full::before { content: none; }
+.ideas-manifesto--full { padding: clamp(50px,6vw,84px); }
+.ideas-manifesto--full h2 { max-width: none; }
+.ideas-manifesto--full .manifesto-disclaimer { margin-top: 20px; color: rgba(255,255,255,.6); font-size: 13px; font-style: italic; line-height: 1.6; }
+.ideas-manifesto--full .manifesto-core { position: relative; z-index: 1; margin-top: 26px; font-size: clamp(17px,1.8vw,22px); font-weight: 600; line-height: 1.55; }
+.ideas-manifesto--full .manifesto-section-title { position: relative; z-index: 1; margin: 40px 0 20px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,.25); font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--acid); }
+.ideas-manifesto--full .manifesto-item { position: relative; z-index: 1; margin-top: 22px; }
+.ideas-manifesto--full .manifesto-item h4 { margin-bottom: 6px; font-size: clamp(17px,1.6vw,22px); font-weight: 700; }
+.ideas-manifesto--full .manifesto-item p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,.85); }
+.ideas-manifesto--full .manifesto-outro { position: relative; z-index: 1; margin-top: 26px; font-size: 15px; line-height: 1.65; color: rgba(255,255,255,.8); }
 @media (max-width: 640px) {
   .idea-card { grid-template-columns: 1fr; gap: 16px; padding: 26px 22px; }
   .idea-recap { font-size: 15px; }
   .ideas-manifesto { padding: 38px 24px; border-left-width: 8px; }
   .ideas-manifesto h2 { font-size: 26px; }
   .ideas-manifesto .sig { margin-left: 0; }
+  .ideas-manifesto--full { padding: 38px 24px; }
+  .ideas-manifesto--full .manifesto-item h4 { font-size: 17px; }
+  .ideas-manifesto--full .manifesto-item p { font-size: 13px; }
 }
 
 /* CTA/footer */
