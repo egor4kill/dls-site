@@ -3,7 +3,7 @@ layout: news-item.njk
 title: Движение ДЛС начинает работу
 date: 2026-08-11
 category: Новости
-image: /assets/images/news/11-авг.-2026-г.-23_51_06-1-.png
+image: /assets/images/news/ww_chatgpt-images-2.0-edit_2026-08-13_10-11-26.png
 author: Егор
 permalink: /news/{{ page.fileSlug }}/
 tags:
