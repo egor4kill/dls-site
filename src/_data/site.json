@@ -16,9 +16,7 @@
   "nav": [
     { "label": "Главная", "url": "/" },
     { "label": "Новости", "url": "/news/" },
-    { "label": "Идеи движения", "url": "/ideas/" },
-    { "label": "Принципы", "url": "/#pillars" },
-    { "label": "Общество", "url": "/#society" }
+    { "label": "Идеи движения", "url": "/ideas/" }
   ],
   "hero": {
     "eyebrow": "Свобода внутри. Сила вовне.",
