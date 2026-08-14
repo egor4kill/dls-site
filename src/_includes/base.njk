@@ -3,13 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if title %}{{ title }} — {{ site.brand.full }}{% else %}{{ site.brand.short }} — {{ site.brand.full }}{% endif %}</title>
-  <meta name="description" content="{% if description %}{{ description }}{% else %}{{ site.meta.description }}{% endif %}">
-  <meta name="theme-color" content="#f4f3ef">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('dls-theme');
+        if (t !== 'light' && t !== 'dark') {
+          t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', t);
+        document.getElementById('metaTheme').setAttribute('content', t === 'dark' ? '#0d1117' : '#f4f3ef');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      }
+    })();
+  </script>
+  {% set pageTitle %}{% if title %}{{ title }} — {{ site.brand.full }}{% else %}{{ site.brand.short }} — {{ site.brand.full }}{% endif %}{% endset %}
+  {% set pageDesc %}{% if description %}{{ description }}{% else %}{{ site.meta.description }}{% endif %}{% endset %}
+  {% set ogType %}{% if tags and 'news' in tags %}article{% else %}website{% endif %}{% endset %}
+  <title>{{ pageTitle }}</title>
+  <meta name="description" content="{{ pageDesc }}">
+  <link rel="canonical" href="{{ site.meta.url }}{{ page.url }}">
+  <meta name="theme-color" id="metaTheme" content="#f4f3ef">
   <link rel="icon" href="{{ '/assets/images/logo.png' | url }}" type="image/png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+  <meta property="og:site_name" content="{{ site.brand.full }}">
+  <meta property="og:type" content="{{ ogType }}">
+  <meta property="og:title" content="{{ pageTitle }}">
+  <meta property="og:description" content="{{ pageDesc }}">
+  <meta property="og:url" content="{{ site.meta.url }}{{ page.url }}">
+  <meta property="og:image" content="{{ site.meta.url }}{{ '/assets/images/logo.png' | url }}">
+  <meta property="og:locale" content="ru_RU">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ pageTitle }}">
+  <meta name="twitter:description" content="{{ pageDesc }}">
+  <meta name="twitter:image" content="{{ site.meta.url }}{{ '/assets/images/logo.png' | url }}">
+  <link rel="stylesheet" href="{{ '/css/fonts.css' | url }}">
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>
 <body class="{{ bodyClass or '' }}">

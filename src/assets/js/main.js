@@ -29,6 +29,51 @@
     });
   }
 
+  /* ---------- тёмная / светлая тема ---------- */
+  var themeBtn = document.getElementById("themeToggle");
+  var metaTheme = document.getElementById("metaTheme");
+  var lastTheme = null;
+  function applyTheme(t, store) {
+    lastTheme = t;
+    document.documentElement.setAttribute("data-theme", t);
+    if (metaTheme) metaTheme.setAttribute("content", t === "dark" ? "#0d1117" : "#f4f3ef");
+    if (themeBtn) {
+      themeBtn.setAttribute("aria-label", t === "dark" ? "Включить светлую тему" : "Включить тёмную тему");
+      themeBtn.setAttribute("aria-pressed", t === "dark" ? "true" : "false");
+    }
+    if (store) {
+      try { localStorage.setItem("dls-theme", t); } catch (e) {}
+    }
+  }
+  function restoreTheme() {
+    var t = lastTheme;
+    if (!t) {
+      try { t = localStorage.getItem("dls-theme"); } catch (e) {}
+    }
+    if (t === "light" || t === "dark") applyTheme(t, false);
+  }
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(next, true);
+    });
+  }
+  window.addEventListener("pageshow", restoreTheme);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) restoreTheme();
+  });
+  window.addEventListener("focus", restoreTheme);
+  if (window.matchMedia) {
+    var scheme = window.matchMedia("(prefers-color-scheme: dark)");
+    if (scheme.addEventListener) {
+      scheme.addEventListener("change", function (e) {
+        var stored = null;
+        try { stored = localStorage.getItem("dls-theme"); } catch (err) {}
+        if (!stored) applyTheme(e.matches ? "dark" : "light", false);
+      });
+    }
+  }
+
   /* ---------- состояние шапки и сдержанное появление блоков ---------- */
   var header = document.querySelector(".site-header");
   function updateHeader() {
@@ -39,7 +84,7 @@
 
   /* ---------- тактильный отклик интерактивных элементов ---------- */
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var pulseTargets = ".cta-btn, .cta-ghost, .cat-chip, .nav-toggle";
+  var pulseTargets = ".cta-btn, .cta-ghost, .cat-chip, .nav-toggle, .theme-toggle";
 
   document.addEventListener("pointerdown", function (e) {
     if (reduceMotion.matches || e.button !== 0) return;
