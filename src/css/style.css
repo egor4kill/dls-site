@@ -80,7 +80,7 @@ main { padding-top: var(--header-h); }
 /* Hero */
 .hero { position: relative; min-height: calc(100svh - var(--header-h)); display: flex; align-items: stretch; overflow: hidden; }
 .hero::before { content: ''; position: absolute; inset: 0 0 0 64%; background: var(--blue); }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 1.14fr) minmax(0, .72fr); gap: clamp(30px, 5vw, 80px); align-items: center; padding-block: clamp(42px, 6vw, 84px); }
+.hero-grid { display: grid; grid-template-columns: 1.14fr .72fr; gap: clamp(30px, 5vw, 80px); align-items: center; padding-block: clamp(42px, 6vw, 84px); }
 .hero-copy { position: relative; z-index: 2; animation: intro-left 650ms var(--ease) both; }
 .hero-title { max-width: 900px; margin-top: 24px; font-size: clamp(44px, 5.7vw, 82px); line-height: .98; text-transform: uppercase; }
 .hero-title em { position: relative; z-index: 0; color: #fff; font-style: normal; white-space: nowrap; }
